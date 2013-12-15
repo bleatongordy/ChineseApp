@@ -1,0 +1,32 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="ChineseApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+    <Grid HorizontalAlignment="Left" Height="800" VerticalAlignment="Top" Width="480">
+        <Grid x:Name="InfoGrid" VerticalAlignment="Top" Background="#FF680000" Height="247">
+            <TextBlock x:Name="StartEvent" IsHitTestVisible="False" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
+            <TextBlock x:Name="MoveEvent" HorizontalAlignment="Left" Margin="0,27,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
+            <TextBlock x:Name="EndEvent" HorizontalAlignment="Left" Margin="0,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
+            <Button x:Name="ResetButton" Content="Submit" HorizontalAlignment="Left" Margin="155,4,0,0" VerticalAlignment="Top" Width="151" Background="Black" Click="ResetButton_Click"/>
+            <TextBox x:Name="ChapterNum" HorizontalAlignment="Left" Height="72" Margin="0,82,0,0" TextWrapping="Wrap" Text="C#" VerticalAlignment="Top" Width="81" GotFocus="ChapterNum_GotFocus"/>
+            <TextBox x:Name="BookName" HorizontalAlignment="Left" Height="72" Margin="86,82,0,0" TextWrapping="Wrap" Text="BookName" VerticalAlignment="Top" Width="189" GotFocus="BookName_GotFocus"/>
+            <TextBox x:Name="English" HorizontalAlignment="Left" Height="72" Margin="0,165,0,0" TextWrapping="Wrap" Text="English" VerticalAlignment="Top" Width="222" GotFocus="English_GotFocus"/>
+            <TextBox x:Name="Pinyin" HorizontalAlignment="Left" Height="72" Margin="227,165,0,0" TextWrapping="Wrap" Text="Pinyin" VerticalAlignment="Top" Width="243" GotFocus="Pinyin_GotFocus"/>
+            <TextBox x:Name="Chinese" HorizontalAlignment="Left" Height="72" Margin="280,82,0,0" TextWrapping="Wrap" Text="Chinese" VerticalAlignment="Top" Width="190" GotFocus="Chinese_GotFocus"/>
+            <Button x:Name="LoadButton" Content="Load" HorizontalAlignment="Left" Margin="306,4,0,0" VerticalAlignment="Top" Width="164" Background="Black" Click="LoadButton_Click"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="553" Margin="0,247,0,0" VerticalAlignment="Top" Width="480" ManipulationStarted="Grid_ManipulationStarted" ManipulationDelta="Grid_ManipulationDelta" ManipulationCompleted="Grid_ManipulationCompleted" Background="Transparent">
+            <Canvas x:Name="DrawArea" HorizontalAlignment="Left" Height="553" VerticalAlignment="Top" Width="480" Background="Transparent"/>
+        </Grid>
+    </Grid>
+</phone:PhoneApplicationPage>
