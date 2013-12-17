@@ -7,29 +7,33 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using ChineseApp.Resources;
-using System.Windows.Media;
-using System.ComponentModel;
-using ChineseApp.ModelViewNamespace;
 using System.Windows.Shapes;
+using ChineseApp.ModelViewNamespace;
+using System.Windows.Media;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 
 namespace ChineseApp
 {
-    public partial class MainPage : PhoneApplicationPage, INotifyPropertyChanged
+    public partial class GamePage : PhoneApplicationPage
     {
         private List<List<Point>> strokedata;
+        private ccData ccChar;
+        private ObservableCollection<string> printableData;
+        private bool started;
 
-        public MainPage()
+        public GamePage()
         {
             InitializeComponent();
+            printableData = new ObservableCollection<string>();
+            strokedata = new List<List<Point>>();
+            started = false;
 
-            strokedata = new List<List<Point>>(); 
+            StrokeResults.ItemsSource = printableData;
         }
 
         private void Grid_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
-            StartEvent.Text = e.ManipulationOrigin.ToString();
             Point point = e.ManipulationOrigin;
             strokedata.Add(new List<Point>());
             strokedata[strokedata.Count - 1].Add(point);
@@ -37,8 +41,6 @@ namespace ChineseApp
 
         private void Grid_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
         {
-            MoveEvent.Text = e.ManipulationOrigin.ToString();
-            
             Point oldpoint = strokedata[strokedata.Count - 1].Last();
             Point point = e.ManipulationOrigin;
 
@@ -60,10 +62,9 @@ namespace ChineseApp
 
         private void Grid_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            EndEvent.Text = e.ManipulationOrigin.ToString();
             Point oldpoint = strokedata[strokedata.Count - 1].Last();
             Point point = e.ManipulationOrigin;
-
+            
             if (point.Y >= 0)
             {
                 strokedata[strokedata.Count - 1].Add(point);
@@ -82,58 +83,46 @@ namespace ChineseApp
                 strokedata.RemoveAt(strokedata.Count - 1);
         }
 
-        private void SubmitButton_Click(object sender, RoutedEventArgs e)
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            ccData c = new ccData();
-            c.chapternum = 1; // int.Parse(ChapterNum.Text);
-            c.bookname = BookName.Text;
-            c.english = English.Text;
-            c.pinyin = Pinyin.Text;
-            c.chinese = Chinese.Text;
-            c.strokedata = new StrokeData(strokedata);
-            ModelView.Instance.add(c);
-            DrawArea.Children.Clear();
-            strokedata.Clear();
+            ccChar = ModelView.Instance.getRandom();
+            EnglishText.Text = ccChar.english;
+            ChineseText.Text = ccChar.chinese;
+            started = true;
         }
 
-        private void NextButton_Click(object sender, RoutedEventArgs e)
+        private void FinishButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
-        }
-
-        private void ChapterNum_GotFocus(object sender, RoutedEventArgs e)
-        {
-            ChapterNum.Text = "";
-        }
-
-        private void BookName_GotFocus(object sender, RoutedEventArgs e)
-        {
-            BookName.Text = "";
-        }
-
-        private void English_GotFocus(object sender, RoutedEventArgs e)
-        {
-            English.Text = "";
-        }
-
-        private void Pinyin_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Pinyin.Text = "";
-        }
-
-        private void Chinese_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Chinese.Text = "";
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
+            if (started)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                StrokeData s = StrokeData.Parse(ccChar.strokedata);
+
+                printableData.Add(StrokeMatch.compare(s, new StrokeData(strokedata)).ToString());
+
+                foreach (List<Point> p in s.strokedata)
+                {
+                    for (int i = 0; i < p.Count - 1; i++)
+                    {
+                        System.Windows.Shapes.Line l = new System.Windows.Shapes.Line();
+                        l.StrokeStartLineCap = PenLineCap.Round;
+                        l.StrokeEndLineCap = PenLineCap.Round;
+                        l.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                        l.StrokeThickness = 10;
+                        l.X1 = p[i].X;
+                        l.Y1 = p[i].Y;
+                        l.X2 = p[i + 1].X;
+                        l.Y2 = p[i + 1].Y;
+
+                        DrawArea.Children.Add(l);
+                    }
+                }
+                started = false;
             }
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
         }
     }
 }

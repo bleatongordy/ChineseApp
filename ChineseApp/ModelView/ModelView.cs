@@ -12,6 +12,17 @@ namespace ChineseApp.ModelViewNamespace
         private ccDB db;
         private ObservableCollection<ccData> chardata;
 
+        private static ModelView instance;
+        public static ModelView Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new ModelView();
+                return instance;
+            }
+        }
+
         // Considering making this static because we should only have one
         public ModelView()
         {
@@ -19,8 +30,6 @@ namespace ChineseApp.ModelViewNamespace
 
             if (db.DatabaseExists() == false)
                 db.CreateDatabase();
-
-            reset();
 
             // Load the Data into an ObservableCollection
             var cData =
@@ -67,6 +76,14 @@ namespace ChineseApp.ModelViewNamespace
             if (ID >= chardata.Count)
                 return null;
             return chardata.ElementAt(ID); // consider adding checking
+        }
+
+        public ccData getRandom()
+        {
+            Random r = new Random();
+            int randID = r.Next(0, chardata.Count - 1);
+
+            return chardata.ElementAt(randID);
         }
 
         public void reset()
