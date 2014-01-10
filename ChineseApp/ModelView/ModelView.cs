@@ -10,7 +10,8 @@ namespace ChineseApp.ModelViewNamespace
     public class ModelView
     {
         private ccDB db;
-        private ObservableCollection<ccData> chardata;
+        public ObservableCollection<ccData> chardata
+        { private set; get; }
 
         private static ModelView instance;
         public static ModelView Instance
@@ -59,16 +60,6 @@ namespace ChineseApp.ModelViewNamespace
                 db.data.DeleteOnSubmit(c);
             }
             db.SubmitChanges();
-        }
-
-        public ObservableCollection<ccData> retrieveGroup(int chapternum, string bookname)
-        {
-            var gQuery =
-                from gdata in chardata
-                where chapternum == gdata.chapternum && bookname == gdata.bookname
-                select gdata;
-
-            return new ObservableCollection<ccData>(gQuery);
         }
 
         public ccData retrieve(int ID)

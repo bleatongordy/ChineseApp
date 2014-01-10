@@ -14,15 +14,13 @@
     shell:SystemTray.IsVisible="False">
     <Grid HorizontalAlignment="Left" Height="800" VerticalAlignment="Top" Width="480">
         <Grid x:Name="InfoGrid" VerticalAlignment="Top" Background="#FF680000" Height="247">
-            <TextBlock x:Name="StartEvent" IsHitTestVisible="False" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
+            <TextBlock x:Name="StartEvent" IsHitTestVisible="False" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="143"/>
             <TextBlock x:Name="MoveEvent" HorizontalAlignment="Left" Margin="0,27,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
             <TextBlock x:Name="EndEvent" HorizontalAlignment="Left" Margin="0,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
             <Button x:Name="SubmitButton" Content="Submit" HorizontalAlignment="Left" Margin="155,4,0,0" VerticalAlignment="Top" Width="151" Background="Black" Click="SubmitButton_Click"/>
-            <TextBox x:Name="ChapterNum" HorizontalAlignment="Left" Height="72" Margin="0,82,0,0" TextWrapping="Wrap" Text="C#" VerticalAlignment="Top" Width="81" GotFocus="ChapterNum_GotFocus"/>
-            <TextBox x:Name="BookName" HorizontalAlignment="Left" Height="72" Margin="86,82,0,0" TextWrapping="Wrap" Text="BookName" VerticalAlignment="Top" Width="189" GotFocus="BookName_GotFocus"/>
-            <TextBox x:Name="English" HorizontalAlignment="Left" Height="72" Margin="0,165,0,0" TextWrapping="Wrap" Text="English" VerticalAlignment="Top" Width="222" GotFocus="English_GotFocus"/>
-            <TextBox x:Name="Pinyin" HorizontalAlignment="Left" Height="72" Margin="227,165,0,0" TextWrapping="Wrap" Text="Pinyin" VerticalAlignment="Top" Width="243" GotFocus="Pinyin_GotFocus"/>
-            <TextBox x:Name="Chinese" HorizontalAlignment="Left" Height="72" Margin="280,82,0,0" TextWrapping="Wrap" Text="Chinese" VerticalAlignment="Top" Width="190" GotFocus="Chinese_GotFocus"/>
+            <TextBox x:Name="English" HorizontalAlignment="Left" Height="62" Margin="0,59,0,0" TextWrapping="Wrap" Text="English" VerticalAlignment="Top" Width="143" GotFocus="English_GotFocus" RenderTransformOrigin="1.288,0.875" FontSize="18"/>
+            <TextBox x:Name="Pinyin" HorizontalAlignment="Left" Height="59" Margin="0,178,0,0" TextWrapping="Wrap" Text="Pinyin" VerticalAlignment="Top" Width="143" GotFocus="Pinyin_GotFocus" FontSize="18"/>
+            <TextBox x:Name="Chinese" HorizontalAlignment="Left" Height="62" Margin="0,121,0,0" TextWrapping="Wrap" Text="Chinese" VerticalAlignment="Top" Width="143" GotFocus="Chinese_GotFocus" FontSize="18"/>
             <Button x:Name="NextButton" Content="Next" HorizontalAlignment="Left" Margin="306,4,0,0" VerticalAlignment="Top" Width="164" Background="Black" Click="NextButton_Click"/>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="553" Margin="0,247,0,0" VerticalAlignment="Top" Width="480" ManipulationStarted="Grid_ManipulationStarted" ManipulationDelta="Grid_ManipulationDelta" ManipulationCompleted="Grid_ManipulationCompleted" Background="Transparent">

@@ -8,6 +8,7 @@
     <!--Application Resources-->
     <Application.Resources>
         <local:LocalizedStrings xmlns:local="clr-namespace:ChineseApp" x:Key="LocalizedStrings"/>
+        <FontFamily x:Key="KaiU">/ChineseApp;component/Fonts/kaiu.ttf#DFKai-SB</FontFamily>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

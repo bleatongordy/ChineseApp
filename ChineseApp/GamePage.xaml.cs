@@ -12,12 +12,14 @@ using ChineseApp.ModelViewNamespace;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using ChineseApp.Strokes;
+using Microsoft.Xna.Framework;
 
 namespace ChineseApp
 {
     public partial class GamePage : PhoneApplicationPage
     {
-        private List<List<Point>> strokedata;
+        private List<List<Vector2>> strokedata;
         private ccData ccChar;
         private ObservableCollection<string> printableData;
         private bool started;
@@ -26,7 +28,7 @@ namespace ChineseApp
         {
             InitializeComponent();
             printableData = new ObservableCollection<string>();
-            strokedata = new List<List<Point>>();
+            strokedata = new List<List<Vector2>>();
             started = false;
 
             StrokeResults.ItemsSource = printableData;
@@ -34,15 +36,15 @@ namespace ChineseApp
 
         private void Grid_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
-            Point point = e.ManipulationOrigin;
-            strokedata.Add(new List<Point>());
+            Vector2 point = new Vector2((float)e.ManipulationOrigin.X, (float)e.ManipulationOrigin.Y);
+            strokedata.Add(new List<Vector2>());
             strokedata[strokedata.Count - 1].Add(point);
         }
 
         private void Grid_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
         {
-            Point oldpoint = strokedata[strokedata.Count - 1].Last();
-            Point point = e.ManipulationOrigin;
+            Vector2 oldpoint = strokedata[strokedata.Count - 1].Last();
+            Vector2 point = new Vector2((float)e.ManipulationOrigin.X, (float)e.ManipulationOrigin.Y);
 
             if (point.Y >= 0)
             {
@@ -50,7 +52,7 @@ namespace ChineseApp
                 Line l = new Line();
                 l.StrokeStartLineCap = PenLineCap.Round;
                 l.StrokeEndLineCap = PenLineCap.Round;
-                l.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                l.Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 255, 255));
                 l.StrokeThickness = 10;
                 l.X1 = oldpoint.X;
                 l.Y1 = oldpoint.Y;
@@ -62,8 +64,8 @@ namespace ChineseApp
 
         private void Grid_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            Point oldpoint = strokedata[strokedata.Count - 1].Last();
-            Point point = e.ManipulationOrigin;
+            Vector2 oldpoint = strokedata[strokedata.Count - 1].Last();
+            Vector2 point = new Vector2((float)e.ManipulationOrigin.X, (float)e.ManipulationOrigin.Y);
             
             if (point.Y >= 0)
             {
@@ -71,7 +73,7 @@ namespace ChineseApp
                 Line l = new Line();
                 l.StrokeStartLineCap = PenLineCap.Round;
                 l.StrokeEndLineCap = PenLineCap.Round;
-                l.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                l.Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 255, 255));
                 l.StrokeThickness = 10;
                 l.X1 = oldpoint.X;
                 l.Y1 = oldpoint.Y;
@@ -95,34 +97,46 @@ namespace ChineseApp
         {
             if (started)
             {
-                StrokeData s = StrokeData.Parse(ccChar.strokedata);
-
-                printableData.Add(StrokeMatch.compare(s, new StrokeData(strokedata)).ToString());
-
-                foreach (List<Point> p in s.strokedata)
+                CChar c = new CChar(strokedata);
+                
+                foreach (Vector2 p in c.MidPointList)
                 {
-                    for (int i = 0; i < p.Count - 1; i++)
-                    {
-                        System.Windows.Shapes.Line l = new System.Windows.Shapes.Line();
-                        l.StrokeStartLineCap = PenLineCap.Round;
-                        l.StrokeEndLineCap = PenLineCap.Round;
-                        l.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-                        l.StrokeThickness = 10;
-                        l.X1 = p[i].X;
-                        l.Y1 = p[i].Y;
-                        l.X2 = p[i + 1].X;
-                        l.Y2 = p[i + 1].Y;
+                    System.Windows.Shapes.Line l = new System.Windows.Shapes.Line();
+                    l.StrokeStartLineCap = PenLineCap.Round;
+                    l.StrokeEndLineCap = PenLineCap.Round;
+                    l.Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+                    l.StrokeThickness = 10;
+                    l.X1 = p.X;
+                    l.Y1 = p.Y;
+                    l.X2 = p.X;
+                    l.Y2 = p.Y;
 
-                        DrawArea.Children.Add(l);
-                    }
+                    DrawArea.Children.Add(l);
                 }
+
+                CChar temp = CChar.Parse(ccChar.strokedata);
+                foreach (Vector2 p in temp.MidPointList)
+                {
+                    System.Windows.Shapes.Line l = new System.Windows.Shapes.Line();
+                    l.StrokeStartLineCap = PenLineCap.Round;
+                    l.StrokeEndLineCap = PenLineCap.Round;
+                    l.Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 255, 0));
+                    l.StrokeThickness = 10;
+                    l.X1 = p.X;
+                    l.Y1 = p.Y;
+                    l.X2 = p.X;
+                    l.Y2 = p.Y;
+
+                    DrawArea.Children.Add(l);
+                }
+
                 started = false;
             }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService.Navigate(new Uri("/ViewPage.xaml", UriKind.Relative));
         }
     }
 }

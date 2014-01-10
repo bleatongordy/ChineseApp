@@ -9,6 +9,15 @@ using System.Windows.Media;
 
 namespace ChineseApp
 {
+    public struct StrokeCompareData
+    {
+        public StrokeData s1;
+        public StrokeData s2;
+        public List<double> positionAnglePercent;
+        public List<double> strokeAnglePercent;
+        public double distanceVariation;
+    }
+
     /*  
      *  The StrokeMatch class compares two StrokeData objects, constructs the different
      *  strokes from their respective parts. It should make data relative, and so therefore
@@ -36,7 +45,22 @@ namespace ChineseApp
             return y / x;
         }
 
-        private static bool checkStrokeData(StrokeData s1, StrokeData s2)
+        private static double variation(List<double> data)
+        {
+            double mean = 0;
+            foreach (double d in data)
+                if(!double.IsNaN(d))
+                    mean += d;
+            mean /= data.Count;
+            double var = 0;
+            foreach (double d in data)
+                if(!double.IsNaN(d))
+                    var += (d - mean) * (d - mean);
+
+            return var / data.Count;
+        }
+
+        private static void checkStrokeData(StrokeData s1, StrokeData s2)
         {
             List<double> slope1 = new List<double>();
             List<double> slope2 = new List<double>();
@@ -51,30 +75,31 @@ namespace ChineseApp
                 slope2.Add(calcSlope(p1, p2));
             }
 
-            return false;
+//            return false;
         }
 
-        private static bool checkStrokeDirection(StrokeData s1, StrokeData s2)
+        private static void checkStrokeDirection(ref StrokeCompareData scd)
         {
             List<double> angles = new List<double>();
+            scd.strokeAnglePercent = new List<double>();
 
-            for (int i = 0; i < s1.strokedata.Count; i++)
+            for (int i = 0; i < scd.s1.strokedata.Count; i++)
             {
                 Point p1 = new Point(), p2 = new Point();
-                p1.X = s1.strokedata[i][s1.strokedata[i].Count - 1].X - s1.strokedata[i][0].X;
-                p1.Y = s1.strokedata[i][s1.strokedata[i].Count - 1].Y - s1.strokedata[i][0].Y;
-                p2.X = s2.strokedata[i][s2.strokedata[i].Count - 1].X - s2.strokedata[i][0].X;
-                p2.Y = s2.strokedata[i][s2.strokedata[i].Count - 1].Y - s2.strokedata[i][0].Y;
-                angles.Add((180 / Math.PI) * Math.Acos(dotprod(p1, p2) / (magnitude(p1) * magnitude(p2))));
+                p1.X = scd.s1.strokedata[i][scd.s1.strokedata[i].Count - 1].X - scd.s1.strokedata[i][0].X;
+                p1.Y = scd.s1.strokedata[i][scd.s1.strokedata[i].Count - 1].Y - scd.s1.strokedata[i][0].Y;
+                p2.X = scd.s2.strokedata[i][scd.s2.strokedata[i].Count - 1].X - scd.s2.strokedata[i][0].X;
+                p2.Y = scd.s2.strokedata[i][scd.s2.strokedata[i].Count - 1].Y - scd.s2.strokedata[i][0].Y;
+                scd.strokeAnglePercent.Add((180 / Math.PI) * Math.Acos(dotprod(p1, p2) / (magnitude(p1) * magnitude(p2))));
 
-                if (angles[i] > 35)
-                    return false;
+//                if (angles[i] > 35)
+//                    return false;
             }
 
-            return true;
+//            return true;
         }
 
-        private static bool checkRelationalData(StrokeData s1, StrokeData s2)
+        private static void checkRelationalData(ref StrokeCompareData scd)
         {
             // checks distance between strokes
             List<double> propvalue = new List<double>();
@@ -82,16 +107,19 @@ namespace ChineseApp
             // checks angles between strokes
             List<double> angles = new List<double>();
 
-            for(int i = 0; i < s1.relationaldata.Count; i++)
+            scd.positionAnglePercent = new List<double>();
+
+            for(int i = 0; i < scd.s1.relationaldata.Count; i++)
             {
-                propvalue.Add(magnitude(s2.relationaldata[i]) / magnitude(s1.relationaldata[i]));
-                angles.Add(Math.Acos(dotprod(s1.relationaldata[i], s2.relationaldata[i]) / (magnitude(s1.relationaldata[i]) * magnitude(s2.relationaldata[i]))));
-                
-                if (propvalue[i] > 5 || angles[i] > 0.87266)
-                    return false;
+                propvalue.Add(magnitude(scd.s2.relationaldata[i]) / magnitude(scd.s1.relationaldata[i]));
+                scd.positionAnglePercent.Add((180 / Math.PI) * Math.Acos(dotprod(scd.s1.relationaldata[i], scd.s2.relationaldata[i]) / (magnitude(scd.s1.relationaldata[i]) * magnitude(scd.s2.relationaldata[i]))));
+//                if (propvalue[i] > 5 || angles[i] > 0.87266)
+//                    return false;
             }
 
-            return true;
+            scd.distanceVariation = variation(propvalue);
+
+//            return true;
         }
 
         private static void debugDraw(StrokeData s1, StrokeData s2, Canvas draw)
@@ -125,13 +153,19 @@ namespace ChineseApp
             }
         }
 
-        public static bool compare(StrokeData s1, StrokeData s2)
+        public static StrokeCompareData compare(StrokeData s1, StrokeData s2)
         {
             // if they have different number of strokes, obviously false
-            if (s1.strokedata.Count != s2.strokedata.Count)
-                return false;
+//            if (s1.strokedata.Count != s2.strokedata.Count)
+//                return false;
 
-            return checkRelationalData(s1, s2) && checkStrokeDirection(s1, s2);
+            StrokeCompareData scd = new StrokeCompareData();
+            scd.s1 = s1;
+            scd.s2 = s2;
+            checkRelationalData(ref scd);
+            checkStrokeDirection(ref scd);
+
+            return scd;
         }
     }
 }

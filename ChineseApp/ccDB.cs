@@ -124,7 +124,7 @@ namespace ChineseApp
     public class ccData : INotifyPropertyChanged
     {
         private int _id;
-        [Column(IsPrimaryKey = true, IsDbGenerated = true, DbType = "INT NOT NULL IDENTITY", CanBeNull = false, AutoSync = AutoSync.OnInsert)]
+        [Column(IsPrimaryKey = true)]
         public int id
         {
             get { return _id; }
@@ -134,36 +134,6 @@ namespace ChineseApp
                 {
                     _id = value;
                     NotifyPropertyChanged("id");
-                }
-            }
-        }
-
-        private int _chapternum;
-        [Column]
-        public int chapternum
-        {
-            get { return _chapternum; }
-            set
-            {
-                if (_chapternum != value)
-                {
-                    _chapternum = value;
-                    NotifyPropertyChanged("chapternum");
-                }
-            }
-        }
-
-        private string _bookname;
-        [Column]
-        public string bookname
-        {
-            get { return _bookname; }
-            set
-            {
-                if (_bookname != value)
-                {
-                    _bookname = value;
-                    NotifyPropertyChanged("bookname");
                 }
             }
         }

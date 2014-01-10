@@ -18,10 +18,10 @@
         <Grid HorizontalAlignment="Left" Height="225" VerticalAlignment="Top" Width="480" Background="#FF680000">
             <Button x:Name="StartButton" Content="Start" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="158" Click="StartButton_Click" Background="Black"/>
             <Button x:Name="FinishButton" Content="Finish" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="158" Click="FinishButton_Click" Background="Black"/>
-            <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="158" Click="BackButton_Click" Background="Black"/>
-            <TextBlock x:Name="EnglishText" HorizontalAlignment="Left" Margin="186,23,0,0" TextWrapping="Wrap" Text="English" VerticalAlignment="Top" Height="30" Width="179"/>
+            <Button x:Name="BackButton" Content="Next" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="158" Click="BackButton_Click" Background="Black"/>
+            <TextBlock x:Name="EnglishText" HorizontalAlignment="Left" Margin="186,23,0,0" TextWrapping="Wrap" Text="English" VerticalAlignment="Top" Height="30" Width="174"/>
             <TextBlock x:Name="ChineseText" HorizontalAlignment="Left" Margin="365,23,0,0" TextWrapping="Wrap" Text="Chinese" VerticalAlignment="Top" Height="30" Width="105"/>
-            <ListBox x:Name="StrokeResults" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="139" Margin="183,66,0,0" VerticalAlignment="Top" Width="287" Background="Wheat" Foreground="Black" FontSize="40"/>
+            <ListBox x:Name="StrokeResults" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="139" Margin="183,66,0,0" VerticalAlignment="Top" Width="287" Background="Wheat" Foreground="Black" FontSize="20"/>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="575" Margin="0,225,0,0" VerticalAlignment="Top" Width="480" ManipulationStarted="Grid_ManipulationStarted" ManipulationDelta="Grid_ManipulationDelta" ManipulationCompleted="Grid_ManipulationCompleted" Background="Transparent">
             <Canvas x:Name="DrawArea" HorizontalAlignment="Left" Height="575" VerticalAlignment="Top" Width="480" Background="Black"/>
